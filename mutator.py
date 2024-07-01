@@ -1,6 +1,7 @@
 
 import random
 import string
+import math
 
 MAXIMUM_LENGTH = 100_000 # Absolute maximum length of the generated data.
 
@@ -9,6 +10,8 @@ ALLOWED_CHARS = string.printable # All allowed characters.
 NEW_DATA_CHANCE = 0.01 # Possibility of creating an entirely new string.
 
 MAX_REPEAT_COUNT = 100_00 # Maximum amount of repetitions
+
+MAX_REPEAT_LENGTH = 10000 # Maximum length of the repeating stuff
 
 MAX_REPEAT_COUNT_LINEAR = 1000
 
@@ -49,12 +52,21 @@ def c(const: float) -> bool: # Rolls a dice and returns true with a probability 
 	return chance() <= const
 
 def rnum(n: int) -> int: # Shorthand
-	if n == 0:
+	if n == 0 or n == -1:
 		return 0
 	return random.randrange(0, n)
 
 def stringmult(string: bytes, c: int) -> bytes: # Multiplies string by c times.
-	return (string * c)[:MAXIMUM_LENGTH] # Just automatically truncate the string
+
+	count = min(math.floor(MAX_REPEAT_LENGTH/len(string)), c)
+	assert isinstance(count, int)
+
+	out = string * count
+	assert len(out) <= MAX_REPEAT_LENGTH
+
+	return out
+
+	#return (string * c)[:MAXIMUM_LENGTH] # Just automatically truncate the string
 
 def rand_ascii_string(n: int) -> bytes: # Generates n random ascii bytes (taken from string.printable)
 	return bytes([ord(random.choice(ALLOWED_CHARS)) for _ in range(n)]) # Create array of allowed bytes and convert to bytes
@@ -165,29 +177,51 @@ if __name__=="__main__": # For testing only (well, fuzzing is testing, but you k
 	#print("random.choice(ALLOWED_CHARS) == "+str(random.choice(ALLOWED_CHARS)))
 	#print(rand_ascii_string(10)) # Generate a random string
 
-	MAX_MUT_COUNT = 10
+	MAX_MUT_COUNT = 2000
 
 	#while True:
 
 	TEST_COUNT = 100000
 
-	for _ in range(TEST_COUNT):
+	#for _ in range(TEST_COUNT):
 
-		#mut_count = rnum(MAX_MUT_COUNT)
-		mut_count = 1
+	
+	while True:
+		mut_count = rnum(MAX_MUT_COUNT)
+		#mut_count = 1
 		res = b"paskaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 		for _ in range(mut_count):
-			#print("len(res) == "+str(len(res)))
+			
 			res = mutate_existing(res)
 			if len(res) > MAXIMUM_LENGTH: # Bounds check
 				res = res[:MAXIMUM_LENGTH]
-
+			#print("len(res) == "+str(len(res)))
+			if b"("*1000 in res:
+				print("first case!!!")
+				if b")"*1000 in res:
+					print("second case!!!!")
+					print(res)
+					break
 		#print(mutate_existing(b"paskaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
 		#print(res)
 		#print("len(res) == "+str(len(res)))
-		if b"("*1000 in res and b")"*1000 in res:
-			print(res)
-			break
+		#if b"("*1000 in res and b")"*1000 in res:
+
+	
+
+	'''
+
+	orig_contents = b"paskaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+	while True:
+		contents = orig_contents
+		mut_count = rnum(MAX_MUT_COUNT)
+		for _ in range(mut_count):
+			contents = mutate(contents)
+
+	'''
+
+
 	exit(0) # Return succesfully
 
 
