@@ -101,7 +101,9 @@ def get_substr(data: bytes) -> bytes:
 	#print("res == "+str(res))
 	return res, rand_ind # Return the substring
 
+def fuzz(buf, add_buf, max_size):
 
+	
 
 
 
@@ -178,30 +180,6 @@ def mutate(data: bytes): # Main mutator entry point. Returns a mutated version o
 	else: # Mutate existing.
 		return mutate_existing(data)
 
-def fuzz(buf, add_buf, max_size): # For AFL and AFL++
-
-	data = buf
-
-	#print(str(type(data)) * 100)
-
-	#assert (isinstance(data, bytes))
-
-	data = bytes(data) # Convert bytearray to bytes.
-
-	data = mutate(data)
-
-	if len(data) >= max_size:
-		print("Truncating returned fuzz data...\n")
-		print("Orig len is " + str(len(data)) + " . New len is " + str(max_size))
-		data = data[:max_size] # Truncate
-
-	data = bytearray(data) # Convert bytes back to bytearray.
-
-	return data
-
-
-def deinit(): # AFL and AFL++ complain if we do not have this for some reason...
-	pass
 
 if __name__=="__main__": # For testing only (well, fuzzing is testing, but you know what I mean :D )
 	#print("random.choice(ALLOWED_CHARS) == "+str(random.choice(ALLOWED_CHARS)))
