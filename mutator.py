@@ -48,6 +48,21 @@ def dist_function(x: float) -> float: # Distribution. x is assumed to be between
 def distribution(c: int) -> int: # Returns a random number (max is c and minimum is zero). This function is biased against small numbers (the probability of generating a relatively small number is high, whileas the probability of generating a comparatively large number is small.)
 	return round(c * dist_function(chance()))
 
+# def custom_mutator()
+
+
+def custom_mutator(data, max_size, seed, native_mutator):
+	# Just call mutate and see what happens...
+	if isinstance(data, bytearray):
+		convert = True
+		data = bytes(data)
+	new_data = mutate(data)
+	if convert:
+		new_data = bytearray(new_data)
+	if len(new_data) >= max_size:
+		return new_data[:max_size] # Just add a cutoff
+	return new_data
+
 
 def chance() -> float: # Shorthand
 	return random.random()
