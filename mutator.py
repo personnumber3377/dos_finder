@@ -13,7 +13,7 @@ MAX_REPEAT_TOKEN_LENGTH = 500 # Maximum length of the string which to repeat.
 MAX_REPEAT_STRING_COUNT = 100 # Maximum amount of repeated strings, for example if we have three of these then this will generate a string like "ababababccccccccccccccqwertyqwertyqwerty" (three repeating substrings)
 EXISTING_SUBSTRING_CHANCE = 0.95 # Change to get an existing substring from the string
 MAX_SUBSTRING_LENGTH = 10
-REPLACE_CHANCE = 0.3 # Chance to replace the original shit string. If not this, then the data will be inserted at a random index.
+REPLACE_CHANCE = 0.3 # Chance to replace the original string. If not this, then the data will be inserted at a random index.
 
 def distribution(c):
 	return random.randrange(1,c*10)
